@@ -6,8 +6,8 @@ A cross-platform Sudoku app built as a Turborepo monorepo — React web app, Exp
 
 ```
 apps/
-  web/      React 18 + Vite + Tailwind CSS
-  mobile/   Expo (React Native 0.74)
+  web/      React 19 + Vite 6 + Tailwind CSS
+  mobile/   Expo SDK 56 (React Native 0.85)
 packages/
   core/     @sudoku/core — solver, validator, and puzzle generator
   ui/       @sudoku/ui   — shared React component library
@@ -34,6 +34,19 @@ pnpm dev       # start all apps in dev mode
 | Format | `pnpm format` |
 
 Before opening a PR: `pnpm test && pnpm lint && pnpm build`
+
+## CI
+
+GitHub Actions runs on every pull request to `main`:
+
+| Workflow | Trigger | What it checks |
+|----------|---------|----------------|
+| Lint, Test and Build | PR | `pnpm lint`, `pnpm test`, `pnpm build` |
+| Security Scan | PR + push to `main` + weekly | `pnpm audit`, Snyk, CodeQL |
+
+Dependabot opens PRs daily for outdated npm packages and GitHub Actions pins.
+
+> **Note:** The Security Scan workflow requires a `SNYK_TOKEN` secret configured in the repository settings for Snyk results to appear in the GitHub Security tab. CodeQL runs without any secrets.
 
 ## Contributing
 
