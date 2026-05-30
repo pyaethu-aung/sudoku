@@ -8,8 +8,8 @@ Turborepo + pnpm workspaces. Two apps consume two shared packages:
 
 ```
 apps/
-  web/      React 18 + Vite + Tailwind CSS
-  mobile/   Expo (React Native 0.74)
+  web/      React 19 + Vite 6 + Tailwind CSS
+  mobile/   Expo SDK 56 (React Native 0.85)
 packages/
   core/     @sudoku/core — pure TS business logic (solve, validate, generate)
   ui/       @sudoku/ui   — shared React component library (peer dep on React)
@@ -37,6 +37,8 @@ Run from the repo root unless noted.
 Tests live only in `packages/core` (Vitest). The `packages/ui` package has no test runner configured yet.
 
 Before opening any PR, all three must pass locally: `pnpm test && pnpm lint && pnpm build`
+
+CI runs on every PR via GitHub Actions (`lint.yml` and `security.yml`). The lint workflow mirrors the local check above. The security workflow runs `pnpm audit --audit-level=high`, Snyk, and CodeQL. Both must pass before merging.
 
 Never push directly to `main`. All changes must go through a pull request. A `pre-push` git hook in `.githooks/` enforces this — activated automatically via the `prepare` pnpm script on `pnpm install`.
 
