@@ -36,6 +36,10 @@ Run from the repo root unless noted.
 
 Tests live only in `packages/core` (Vitest). The `packages/ui` package has no test runner configured yet.
 
+Before opening any PR, all three must pass locally: `pnpm test && pnpm lint && pnpm build`
+
+Never push directly to `main`. All changes must go through a pull request. A `pre-push` git hook in `.githooks/` enforces this — activated automatically via the `prepare` pnpm script on `pnpm install`.
+
 ## Key conventions
 
 - **ESM everywhere**: all packages use `"type": "module"`.
@@ -43,6 +47,18 @@ Tests live only in `packages/core` (Vitest). The `packages/ui` package has no te
 - **Prettier**: single quotes, trailing commas, semicolons, 2-space indent, 100-char print width.
 - **ESLint**: `@typescript-eslint/recommended` + `prettier` (no custom rules yet).
 - **Turbo task graph**: `build` depends on `^build` (packages build before apps); `test` and `lint` are independent.
+
+## Skills
+
+Skills are stored under `.agents/skills/` (source files) with symlinks from `.claude/skills/`. Active skills are tracked in `skills-lock.json` (sourced from `pyaethu-aung/skills` on GitHub).
+
+| Skill | When to use |
+|---|---|
+| `/commit-message` | Creating or amending any git commit |
+| `/create-pr` | Opening a GitHub pull request |
+| `/update-readme` | After any user-facing change worth documenting |
+
+Two `PreToolUse` hooks in `.claude/settings.json` enforce that `git commit` and `gh pr create` go through the relevant skills. Do not bypass them with `--no-verify`.
 
 ## Current state
 
