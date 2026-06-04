@@ -1,3 +1,53 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: oklch(1 0 0);
+    --surface: oklch(0.968 0.004 255);
+    --ink: oklch(0.22 0.02 260);
+    --muted: oklch(0.55 0.015 260);
+    --primary: oklch(0.5 0.16 255);
+    --primary-fg: oklch(0.99 0 0);
+    --accent: oklch(0.52 0.11 200);
+    --danger: oklch(0.55 0.2 25);
+    --cell-related: oklch(0.95 0.02 255);
+    --cell-conflict-bg: oklch(0.95 0.05 25);
+    --grid-line: oklch(0.85 0.005 260);
+    --grid-line-bold: oklch(0.3 0.02 260);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: oklch(0.17 0.012 260);
+      --surface: oklch(0.225 0.014 260);
+      --ink: oklch(0.95 0.008 260);
+      --muted: oklch(0.68 0.012 260);
+      --primary: oklch(0.62 0.15 255);
+      --primary-fg: oklch(0.99 0 0);
+      --accent: oklch(0.72 0.12 200);
+      --danger: oklch(0.68 0.19 25);
+      --cell-related: oklch(0.26 0.03 255);
+      --cell-conflict-bg: oklch(0.3 0.06 25);
+      --grid-line: oklch(0.32 0.01 260);
+      --grid-line-bold: oklch(0.62 0.02 260);
+    }
+  }
+
+  html {
+    font-family: Inter, system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    background-color: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
