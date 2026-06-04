@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-04T00:00:00Z",
+  "title": "Design System: Sudoku Solver",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Layout Blue",
+        "canonical": "oklch(0.50 0.16 255)",
+        "dark": "oklch(0.62 0.15 255)",
+        "tonalRamp": [
+          "oklch(0.15 0.10 255)",
+          "oklch(0.27 0.14 255)",
+          "oklch(0.38 0.16 255)",
+          "oklch(0.50 0.16 255)",
+          "oklch(0.62 0.15 255)",
+          "oklch(0.73 0.12 255)",
+          "oklch(0.84 0.08 255)",
+          "oklch(0.95 0.04 255)"
+        ]
+      },
+      "accent": {
+        "role": "secondary",
+        "displayName": "Solver Teal",
+        "canonical": "oklch(0.52 0.11 200)",
+        "dark": "oklch(0.72 0.12 200)",
+        "tonalRamp": [
+          "oklch(0.15 0.06 200)",
+          "oklch(0.27 0.08 200)",
+          "oklch(0.38 0.10 200)",
+          "oklch(0.52 0.11 200)",
+          "oklch(0.62 0.11 200)",
+          "oklch(0.72 0.12 200)",
+          "oklch(0.84 0.08 200)",
+          "oklch(0.94 0.04 200)"
+        ]
+      },
+      "danger": {
+        "role": "tertiary",
+        "displayName": "Conflict Red",
+        "canonical": "oklch(0.55 0.20 25)",
+        "dark": "oklch(0.68 0.19 25)",
+        "tonalRamp": [
+          "oklch(0.15 0.07 25)",
+          "oklch(0.27 0.11 25)",
+          "oklch(0.38 0.15 25)",
+          "oklch(0.55 0.20 25)",
+          "oklch(0.68 0.19 25)",
+          "oklch(0.78 0.14 25)",
+          "oklch(0.88 0.08 25)",
+          "oklch(0.95 0.03 25)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(0.22 0.02 260)",
+        "dark": "oklch(0.95 0.008 260)",
+        "tonalRamp": [
+          "oklch(0.15 0.02 260)",
+          "oklch(0.22 0.02 260)",
+          "oklch(0.34 0.02 260)",
+          "oklch(0.46 0.018 260)",
+          "oklch(0.55 0.015 260)",
+          "oklch(0.70 0.012 260)",
+          "oklch(0.85 0.008 260)",
+          "oklch(0.97 0.004 260)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "canonical": "oklch(0.968 0.004 255)",
+        "dark": "oklch(0.225 0.014 260)",
+        "tonalRamp": [
+          "oklch(0.17 0.012 260)",
+          "oklch(0.225 0.014 260)",
+          "oklch(0.32 0.012 260)",
+          "oklch(0.50 0.008 258)",
+          "oklch(0.70 0.006 256)",
+          "oklch(0.85 0.005 256)",
+          "oklch(0.94 0.004 255)",
+          "oklch(1.00 0.000 0)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "title": { "displayName": "Title", "purpose": "The single page heading." },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Grid digit; weight encodes authorship (700 user, 400 solver), tabular figures."
+      },
+      "body": { "displayName": "Body", "purpose": "Subtitle and status line." },
+      "label": { "displayName": "Label", "purpose": "Button text." }
+    },
+    "shadows": [
+      {
+        "name": "frame-lift",
+        "value": "0 1px 2px rgba(0,0,0,0.05)",
+        "purpose": "The board frame's only shadow; a faint ambient resting elevation, never over 8px blur."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-transition",
+        "value": "150ms cubic-bezier(0, 0, 0.2, 1)",
+        "purpose": "Color-only transitions for selection, conflict, and solved states. Ease-out, 150ms."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0.01ms",
+        "purpose": "Under prefers-reduced-motion: reduce, all transitions collapse to instant."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The Solve action. The one filled, brand-colored button on the page.",
+      "html": "<button class=\"ds-btn-primary\">Solve</button>",
+      "css": ".ds-btn-primary { background: var(--primary); color: var(--primary-fg); font-family: Inter, system-ui, sans-serif; font-size: 1rem; font-weight: 500; line-height: 1.5rem; padding: 8px 20px; border: none; border-radius: 8px; cursor: pointer; transition: opacity 150ms cubic-bezier(0,0,0.2,1); } .ds-btn-primary:hover { opacity: 0.9; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "The Clear action. Outlined, recedes behind the primary.",
+      "html": "<button class=\"ds-btn-secondary\">Clear</button>",
+      "css": ".ds-btn-secondary { background: var(--bg); color: var(--ink); font-family: Inter, system-ui, sans-serif; font-size: 1rem; font-weight: 500; line-height: 1.5rem; padding: 8px 20px; border: 1px solid var(--grid-line); border-radius: 8px; cursor: pointer; transition: background-color 150ms cubic-bezier(0,0,0.2,1); } .ds-btn-secondary:hover { background: var(--surface); } .ds-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary); }"
+    },
+    {
+      "name": "Sudoku Cell",
+      "kind": "custom",
+      "refersTo": "cell",
+      "description": "The signature element. One square cell with default, selected, related, conflict, and solved states. Authorship shows in weight as well as color.",
+      "html": "<div class=\"ds-cellrow\"><button class=\"ds-cell\">5</button><button class=\"ds-cell ds-cell--related\">3</button><button class=\"ds-cell ds-cell--solved\">4</button><button class=\"ds-cell ds-cell--conflict\">5</button><button class=\"ds-cell ds-cell--selected\">7</button></div>",
+      "css": ".ds-cellrow { display: inline-flex; border: 2px solid var(--grid-line-bold); border-radius: 12px; overflow: hidden; background: var(--bg); } .ds-cell { width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center; background: var(--bg); color: var(--ink); font-family: Inter, system-ui, sans-serif; font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; border: none; border-right: 1px solid var(--grid-line); cursor: pointer; transition: background-color 150ms cubic-bezier(0,0,0.2,1); } .ds-cell:last-child { border-right: none; } .ds-cell--related { background: var(--cell-related); } .ds-cell--solved { color: var(--accent); font-weight: 400; } .ds-cell--conflict { background: var(--cell-conflict-bg); color: var(--danger); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 2px; } .ds-cell--selected { background: var(--primary); color: var(--primary-fg); }"
+    },
+    {
+      "name": "Status Line",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "A single reserved line for the solve verdict. Holds its height when empty so the layout never jumps.",
+      "html": "<p class=\"ds-status ds-status--success\" role=\"status\" aria-live=\"polite\">Solved</p>",
+      "css": ".ds-status { height: 1.5rem; margin: 0; font-family: Inter, system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; } .ds-status--info { color: var(--muted); } .ds-status--error { color: var(--danger); } .ds-status--success { color: var(--accent); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Instrument",
+    "overview": "A well-made instrument, not an app with personality to spend. A person arrives with a puzzle, types it in, and gets a correct verdict in seconds. The interface earns trust the way a good ruler or calculator does: exact, quiet, and disappearing into the task. One committed brand color (Layout Blue) carries selection, the primary action, and focus against deliberately neutral surfaces; warmth comes from the color and the type, never from a tinted background. Color never carries meaning alone: user and solver digits differ in weight as well as hue, and conflicts carry an underline as well as red.",
+    "keyCharacteristics": [
+      "One committed brand color; neutral surfaces.",
+      "Authorship is unmistakable: user digits are bold ink, solver digits are normal-weight teal.",
+      "Redundant encoding: every color meaning has a second, non-chromatic cue.",
+      "Dense tabular grid; minimal chrome.",
+      "Auto light/dark, WCAG AA, full keyboard operation."
+    ],
+    "rules": [
+      {
+        "name": "The Authorship Rule",
+        "body": "A user-entered digit and a solver-filled digit must never be told apart by color alone. User digits are Ink at weight 700; solver digits are Solver Teal at weight 400. Hue and weight always move together.",
+        "section": "colors"
+      },
+      {
+        "name": "The Neutral Surface Rule",
+        "body": "The body and cell background is pure white (or near-black in dark mode). Warmth and coolness live in the brand color and the type, never in a tinted surface. Cream, sand, and beige backgrounds are prohibited.",
+        "section": "colors"
+      },
+      {
+        "name": "The Auto-Theme Rule",
+        "body": "Every token ships a light and a dark value, switched by prefers-color-scheme. There is no manual theme toggle; the system follows the OS.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "Grid digits always use font-variant-numeric: tabular-nums. A 1 and a 9 occupy the same width so the grid never shifts as it fills.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Frame Rule",
+        "body": "Surfaces are flat. The board carries one whisper-light ambient shadow; everything else is flat and reads through color, border, and weight. No element pairs a 1px border with a wide soft shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do carry every color meaning with a second cue: weight for authorship, underline for conflict. Color alone is never the signal.",
+      "Do keep the body and cell background pure white in light mode and near-black in dark mode; let Layout Blue and the type carry the character.",
+      "Do keep grid digits on tabular-nums so columns stay aligned.",
+      "Do state verdicts plainly: \"No solution exists\", \"Puzzle has multiple solutions\", \"Solved\". No exclamation, no celebration.",
+      "Do keep Solver Teal at hue ~200 so it stays separable from Conflict Red for red-green color-blind users."
+    ],
+    "donts": [
+      "Don't ship the toy/gamey register: no confetti, stars, streaks, or cartoon styling on a solve.",
+      "Don't drift toward the ad-heavy \"free sudoku solver\" look: cluttered, slow, untrustworthy chrome around the grid.",
+      "Don't use the generic AI-default surface: warm cream/beige backgrounds, a dusty accent, soft drop-shadowed cards, or an uppercase tracked eyebrow over a section.",
+      "Don't pair a 1px border with a wide soft shadow (the ghost-card tell), or round cards past 16px.",
+      "Don't distinguish solver digits from user digits by color only, and never signal a conflict with red text alone."
+    ]
+  }
+}
