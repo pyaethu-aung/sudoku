@@ -9,9 +9,22 @@ apps/
   web/      React 19 + Vite 6 + Tailwind CSS
   mobile/   Expo SDK 56 (React Native 0.85)
 packages/
-  core/     @sudoku/core — solver, validator, and puzzle generator
+  core/     @sudoku/core — Sudoku solver and validation logic
   ui/       @sudoku/ui   — shared React component library
 ```
+
+## Web app
+
+Enter a puzzle into the 9×9 grid and solve it. The solver reports one of three
+outcomes: the puzzle is solved (the solution fills in), no solution exists, or
+the puzzle has multiple solutions. Rule conflicts highlight in red as you type.
+
+- Click a cell to select it; move with the arrow keys.
+- Type **1–9** to fill the selected cell; **Backspace** or **Delete** clears it.
+- **Solve** fills a uniquely-solvable puzzle; **Clear** empties the board.
+- The selected cell and its row, column, and 3×3 box are highlighted, and
+  solver-filled cells are visually distinct from the digits you entered.
+- Adapts to light and dark system themes.
 
 ## Getting started
 
