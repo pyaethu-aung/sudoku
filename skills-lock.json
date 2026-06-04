@@ -13,6 +13,12 @@
       "skillPath": "skills/create-pr/SKILL.md",
       "computedHash": "f27c741469058a54c92561fed0bcbd9ffa6053652c65711fc12621a40b3a188d"
     },
+    "impeccable": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/impeccable/SKILL.md",
+      "computedHash": "16180e7175cb29ef050926233b8514d7323294156890e1f1b17024ba8d9dab71"
+    },
     "update-readme": {
       "source": "pyaethu-aung/skills",
       "sourceType": "github",
