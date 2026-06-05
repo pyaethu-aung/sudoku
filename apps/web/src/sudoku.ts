@@ -1,8 +1,26 @@
 import { isValid, type Grid } from '@sudoku/core';
 
+/**
+ * The fewest clues a Sudoku can carry and still pin down a single solution. A
+ * proven result: no valid puzzle with a unique answer exists below 17. With
+ * fewer, the grid always admits many completions, so a solve isn't meaningful.
+ */
+export const MIN_CLUES = 17;
+
 /** A fresh 9×9 board of empty cells. */
 export function emptyBoard(): Grid {
   return Array.from({ length: 9 }, () => Array<number>(9).fill(0));
+}
+
+/** Count of filled (non-zero) cells, i.e. the clues the user has entered. */
+export function countClues(board: Grid): number {
+  let clues = 0;
+  for (const row of board) {
+    for (const value of row) {
+      if (value !== 0) clues++;
+    }
+  }
+  return clues;
 }
 
 /** Stable key for a cell coordinate, used for selection and conflict lookups. */

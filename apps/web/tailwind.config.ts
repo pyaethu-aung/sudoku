@@ -13,6 +13,7 @@ export default {
         'primary-fg': 'var(--primary-fg)',
         accent: 'var(--accent)',
         danger: 'var(--danger)',
+        warning: 'var(--warning)',
         related: 'var(--cell-related)',
         'conflict-bg': 'var(--cell-conflict-bg)',
         line: 'var(--grid-line)',

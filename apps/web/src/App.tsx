@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { countSolutions, solve, type Grid } from '@sudoku/core';
 import { Button } from '@sudoku/ui';
-import { emptyBoard, getConflicts } from './sudoku';
+import { countClues, emptyBoard, getConflicts, MIN_CLUES } from './sudoku';
 import Board from './components/Board';
 
-type StatusKind = 'info' | 'error' | 'success';
+type StatusKind = 'info' | 'warning' | 'error' | 'success';
 interface Status {
   kind: StatusKind;
   text: string;
@@ -12,6 +12,7 @@ interface Status {
 
 const STATUS_CLASS: Record<StatusKind, string> = {
   info: 'text-muted',
+  warning: 'text-warning',
   error: 'text-danger',
   success: 'text-accent',
 };
@@ -78,13 +79,23 @@ export default function App() {
   }, [selected, setCell, move]);
 
   const handleSolve = useCallback(() => {
+    const clues = countClues(board);
+    if (clues < MIN_CLUES) {
+      setStatus({
+        kind: 'warning',
+        text: `Enter at least ${MIN_CLUES} clues to solve (you have ${clues})`,
+      });
+      setSolution(null);
+      return;
+    }
+
     const solutions = countSolutions(board);
     if (solutions === 0) {
       setStatus({ kind: 'error', text: 'No solution exists' });
       setSolution(null);
     } else if (solutions === 2) {
-      setStatus({ kind: 'info', text: 'Puzzle has multiple solutions' });
-      setSolution(null);
+      setSolution(solve(board));
+      setStatus({ kind: 'info', text: 'Multiple solutions exist; showing one' });
     } else {
       setSolution(solve(board));
       setStatus({ kind: 'success', text: 'Solved' });
