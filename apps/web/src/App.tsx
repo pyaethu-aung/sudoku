@@ -51,6 +51,12 @@ export default function App() {
   const handleSolve = useCallback(() => {
     setWhyOpen(false);
 
+    if (conflicts.size > 0) {
+      setStatus({ kind: 'error', text: 'Fix the highlighted conflicts to solve' });
+      setSolution(null);
+      return;
+    }
+
     const clues = countClues(board);
     if (clues < MIN_CLUES) {
       setStatus({
@@ -72,7 +78,7 @@ export default function App() {
       setSolution(solve(board));
       setStatus({ kind: 'success', text: 'Solved' });
     }
-  }, [board]);
+  }, [board, conflicts]);
 
   const handleClear = useCallback(() => {
     setBoard(emptyBoard());
