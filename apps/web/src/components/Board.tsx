@@ -14,6 +14,8 @@ interface BoardProps {
   onSelect: (row: number, col: number) => void;
   /** Set the selected cell's value (1-9, or 0 to clear). */
   onSetCell: (value: number) => void;
+  /** Solve the puzzle (bound to Enter while the grid has focus). */
+  onSolve: () => void;
 }
 
 function isRelated(selected: [number, number] | null, row: number, col: number): boolean {
@@ -34,6 +36,7 @@ export default function Board({
   solved,
   onSelect,
   onSetCell,
+  onSolve,
 }: BoardProps) {
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -56,6 +59,9 @@ export default function Board({
       onSetCell(Number(key));
     } else if (key === 'Backspace' || key === 'Delete' || key === '0') {
       onSetCell(0);
+    } else if (key === 'Enter') {
+      event.preventDefault();
+      onSolve();
     } else if (
       key === 'ArrowUp' ||
       key === 'ArrowDown' ||

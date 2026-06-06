@@ -29,6 +29,22 @@ export function cellKey(row: number, col: number): string {
 }
 
 /**
+ * Parse a pasted puzzle string into a board. Accepts the common 81-character
+ * format: digits 1-9 are clues, `0` and `.` are blanks, any other character
+ * (whitespace, separators) is ignored. Returns null unless exactly 81 cells
+ * are found, so a stray paste never half-fills the grid.
+ */
+export function parsePuzzle(text: string): Grid | null {
+  const cells = [...text].filter((c) => /[0-9.]/.test(c));
+  if (cells.length !== 81) return null;
+  const board = emptyBoard();
+  cells.forEach((c, i) => {
+    board[Math.floor(i / 9)][i % 9] = c === '.' || c === '0' ? 0 : Number(c);
+  });
+  return board;
+}
+
+/**
  * Coordinates of every filled cell that breaks a Sudoku rule, as `"row,col"`
  * keys. Reuses core `isValid` (which ignores the target cell) — no rule logic
  * is duplicated here.

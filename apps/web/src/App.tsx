@@ -1,7 +1,7 @@
-import { useCallback, useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { countSolutions, solve, type Grid } from '@sudoku/core';
 import { Button } from '@sudoku/ui';
-import { countClues, emptyBoard, getConflicts, MIN_CLUES } from './sudoku';
+import { countClues, emptyBoard, getConflicts, MIN_CLUES, parsePuzzle } from './sudoku';
 import Board from './components/Board';
 import Keypad from './components/Keypad';
 
@@ -110,6 +110,24 @@ export default function App() {
     setAnnounce('Clear undone');
   }, [cleared]);
 
+  // Load a puzzle pasted as an 81-character string (digits, with 0 or . for
+  // blanks). Non-matching pastes are ignored so normal copy/paste still works.
+  useEffect(() => {
+    function onPaste(event: ClipboardEvent) {
+      const parsed = parsePuzzle(event.clipboardData?.getData('text') ?? '');
+      if (!parsed) return;
+      event.preventDefault();
+      setBoard(parsed);
+      setSolution(null);
+      setStatus(null);
+      setWhyOpen(false);
+      setCleared(null);
+      setAnnounce('Puzzle loaded from paste');
+    }
+    window.addEventListener('paste', onPaste);
+    return () => window.removeEventListener('paste', onPaste);
+  }, []);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-page px-4 py-10 text-ink">
       <header className="text-center">
@@ -127,6 +145,7 @@ export default function App() {
         solved={solved}
         onSelect={(row, col) => setSelected([row, col])}
         onSetCell={setCell}
+        onSolve={handleSolve}
       />
 
       <Keypad onInput={setCell} onErase={() => setCell(0)} disabled={!selected} />
