@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useMemo, useState, type ReactNode } from 'react';
 import { countSolutions, solve, type Grid } from '@sudoku/core';
 import { Button } from '@sudoku/ui';
 import { countClues, emptyBoard, getConflicts, MIN_CLUES } from './sudoku';
 import Board from './components/Board';
+import Keypad from './components/Keypad';
 
 type StatusKind = 'info' | 'warning' | 'error' | 'success';
 interface Status {
@@ -19,7 +20,8 @@ const STATUS_CLASS: Record<StatusKind, string> = {
 
 export default function App() {
   const [board, setBoard] = useState<Grid>(emptyBoard);
-  const [selected, setSelected] = useState<[number, number] | null>(null);
+  // Start with the top-left cell selected so the keypad has a target on load.
+  const [selected, setSelected] = useState<[number, number] | null>([0, 0]);
   const [solution, setSolution] = useState<Grid | null>(null);
   const [status, setStatus] = useState<Status | null>(null);
   const [whyOpen, setWhyOpen] = useState(false);
@@ -29,10 +31,10 @@ export default function App() {
   const solved = solution !== null;
 
   // Editing the board always returns to edit mode and clears any prior verdict.
-  const setCell = useCallback((value: number) => {
-    setSelected((current) => {
-      if (!current) return current;
-      const [row, col] = current;
+  const setCell = useCallback(
+    (value: number) => {
+      if (!selected) return;
+      const [row, col] = selected;
       setBoard((prev) => {
         if (prev[row][col] === value) return prev;
         const next = prev.map((r) => [...r]);
@@ -42,46 +44,13 @@ export default function App() {
       setSolution(null);
       setStatus(null);
       setWhyOpen(false);
-      return current;
-    });
-  }, []);
-
-  const move = useCallback((dRow: number, dCol: number) => {
-    setSelected((current) => {
-      if (!current) return [0, 0];
-      const [row, col] = current;
-      return [Math.min(8, Math.max(0, row + dRow)), Math.min(8, Math.max(0, col + dCol))];
-    });
-  }, []);
-
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (!selected) return;
-      const { key } = event;
-      if (key >= '1' && key <= '9') {
-        setCell(Number(key));
-      } else if (key === 'Backspace' || key === 'Delete' || key === '0') {
-        setCell(0);
-      } else if (key === 'ArrowUp') {
-        event.preventDefault();
-        move(-1, 0);
-      } else if (key === 'ArrowDown') {
-        event.preventDefault();
-        move(1, 0);
-      } else if (key === 'ArrowLeft') {
-        event.preventDefault();
-        move(0, -1);
-      } else if (key === 'ArrowRight') {
-        event.preventDefault();
-        move(0, 1);
-      }
-    }
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [selected, setCell, move]);
+    },
+    [selected],
+  );
 
   const handleSolve = useCallback(() => {
     setWhyOpen(false);
+
     const clues = countClues(board);
     if (clues < MIN_CLUES) {
       setStatus({
@@ -109,7 +78,8 @@ export default function App() {
     setBoard(emptyBoard());
     setSolution(null);
     setStatus(null);
-    setSelected(null);
+    // Keep a cell selected so the keypad stays usable after clearing.
+    setSelected([0, 0]);
     setWhyOpen(false);
   }, []);
 
@@ -129,7 +99,10 @@ export default function App() {
         conflicts={conflicts}
         solved={solved}
         onSelect={(row, col) => setSelected([row, col])}
+        onSetCell={setCell}
       />
+
+      <Keypad onInput={setCell} onErase={() => setCell(0)} disabled={!selected} />
 
       <div className="flex gap-3">
         <Button variant="primary" onClick={handleSolve}>
@@ -148,7 +121,7 @@ export default function App() {
             status ? STATUS_CLASS[status.kind] : 'text-transparent'
           }`}
         >
-        {status?.text ?? ' '}
+          <span>{status?.text}</span>
           {status?.kind === 'warning' && (
             <button
               type="button"

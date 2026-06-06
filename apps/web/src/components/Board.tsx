@@ -1,3 +1,4 @@
+import { useRef, type KeyboardEvent } from 'react';
 import type { Grid } from '@sudoku/core';
 import { cellKey } from '../sudoku';
 import Cell from './Cell';
@@ -11,6 +12,8 @@ interface BoardProps {
   conflicts: Set<string>;
   solved: boolean;
   onSelect: (row: number, col: number) => void;
+  /** Set the selected cell's value (1-9, or 0 to clear). */
+  onSetCell: (value: number) => void;
 }
 
 function isRelated(selected: [number, number] | null, row: number, col: number): boolean {
@@ -21,11 +24,58 @@ function isRelated(selected: [number, number] | null, row: number, col: number):
   return sr === row || sc === col || sameBox;
 }
 
-export default function Board({ display, board, selected, conflicts, solved, onSelect }: BoardProps) {
+const clamp = (n: number) => Math.min(8, Math.max(0, n));
+
+export default function Board({
+  display,
+  board,
+  selected,
+  conflicts,
+  solved,
+  onSelect,
+  onSetCell,
+}: BoardProps) {
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  // Keep DOM focus on the selected cell so the focus ring and selection never
+  // diverge, and arrow keys move both together.
+  function focusCell(row: number, col: number) {
+    gridRef.current
+      ?.querySelector<HTMLButtonElement>(`[data-row="${row}"][data-col="${col}"]`)
+      ?.focus();
+  }
+
+  // Scoped to the grid (not window): typing only edits a cell when one is
+  // focused, so keystrokes never leak while buttons or links hold focus.
+  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (!selected) return;
+    const [row, col] = selected;
+    const { key } = event;
+
+    if (key >= '1' && key <= '9') {
+      onSetCell(Number(key));
+    } else if (key === 'Backspace' || key === 'Delete' || key === '0') {
+      onSetCell(0);
+    } else if (
+      key === 'ArrowUp' ||
+      key === 'ArrowDown' ||
+      key === 'ArrowLeft' ||
+      key === 'ArrowRight'
+    ) {
+      event.preventDefault();
+      const nextRow = clamp(row + (key === 'ArrowUp' ? -1 : key === 'ArrowDown' ? 1 : 0));
+      const nextCol = clamp(col + (key === 'ArrowLeft' ? -1 : key === 'ArrowRight' ? 1 : 0));
+      onSelect(nextRow, nextCol);
+      focusCell(nextRow, nextCol);
+    }
+  }
+
   return (
     <div
+      ref={gridRef}
       role="grid"
       aria-label="Sudoku board"
+      onKeyDown={handleKeyDown}
       className="grid w-[min(90vw,30rem)] grid-cols-9 overflow-hidden rounded-xl border-2 border-line-bold bg-page shadow-sm"
     >
       {display.map((rowValues, row) =>

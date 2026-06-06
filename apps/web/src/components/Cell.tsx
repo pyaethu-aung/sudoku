@@ -35,6 +35,9 @@ export default function Cell({ row, col, value, selected, related, conflict, sol
     <button
       type="button"
       role="gridcell"
+      data-row={row}
+      data-col={col}
+      tabIndex={selected ? 0 : -1}
       aria-label={`Row ${row + 1}, column ${col + 1}${value ? `, ${value}` : ', empty'}`}
       aria-selected={selected}
       onClick={() => onSelect(row, col)}

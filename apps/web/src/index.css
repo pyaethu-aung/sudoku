@@ -60,6 +60,18 @@
   animation: why-reveal 180ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Touch input only: the on-screen number pad shows for coarse pointers, so the
+   desktop layout stays minimal and relies on the hardware keyboard. */
+.keypad {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .keypad {
+    display: grid;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
