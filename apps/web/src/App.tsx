@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { countSolutions, solve, type Grid } from '@sudoku/core';
 import { Button } from '@sudoku/ui';
 import { countClues, emptyBoard, getConflicts, MIN_CLUES } from './sudoku';
@@ -22,6 +22,7 @@ export default function App() {
   const [selected, setSelected] = useState<[number, number] | null>(null);
   const [solution, setSolution] = useState<Grid | null>(null);
   const [status, setStatus] = useState<Status | null>(null);
+  const [whyOpen, setWhyOpen] = useState(false);
 
   const conflicts = useMemo(() => getConflicts(board), [board]);
   const display = solution ?? board;
@@ -40,6 +41,7 @@ export default function App() {
       });
       setSolution(null);
       setStatus(null);
+      setWhyOpen(false);
       return current;
     });
   }, []);
@@ -79,6 +81,7 @@ export default function App() {
   }, [selected, setCell, move]);
 
   const handleSolve = useCallback(() => {
+    setWhyOpen(false);
     const clues = countClues(board);
     if (clues < MIN_CLUES) {
       setStatus({
@@ -107,6 +110,7 @@ export default function App() {
     setSolution(null);
     setStatus(null);
     setSelected(null);
+    setWhyOpen(false);
   }, []);
 
   return (
@@ -136,13 +140,98 @@ export default function App() {
         </Button>
       </div>
 
-      <p
-        role="status"
-        aria-live="polite"
-        className={`h-6 text-sm font-medium ${status ? STATUS_CLASS[status.kind] : 'text-transparent'}`}
-      >
+      <div className="flex w-[min(90vw,30rem)] flex-col items-center gap-2">
+        <p
+          role="status"
+          aria-live="polite"
+          className={`flex min-h-6 flex-wrap items-center justify-center gap-x-2 text-sm font-medium ${
+            status ? STATUS_CLASS[status.kind] : 'text-transparent'
+          }`}
+        >
         {status?.text ?? ' '}
-      </p>
+          {status?.kind === 'warning' && (
+            <button
+              type="button"
+              aria-expanded={whyOpen}
+              aria-controls="why-minimum"
+              onClick={() => setWhyOpen((open) => !open)}
+              className="inline-flex items-center gap-1 rounded-sm text-primary underline decoration-1 underline-offset-2 outline-none transition-opacity duration-150 ease-out hover:opacity-80 focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              Why 17?
+              <Chevron open={whyOpen} />
+            </button>
+          )}
+        </p>
+
+        {status?.kind === 'warning' && whyOpen && (
+          <div
+            id="why-minimum"
+            className="why-reveal max-w-[58ch] text-center text-sm leading-relaxed text-muted"
+          >
+            <p className="text-pretty">
+              A standard Sudoku needs at least 17 givens to have a single solution. With
+              fewer, more than one solution always exists, proven by an exhaustive computer
+              search.
+            </p>
+            <p className="mt-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+              <ReferenceLink href="https://en.wikipedia.org/wiki/Mathematics_of_Sudoku#Minimum_number_of_givens">
+                Why 17 is the minimum (Wikipedia)
+              </ReferenceLink>
+              <ReferenceLink href="https://arxiv.org/abs/1201.0749">
+                Read the proof (McGuire et al.)
+              </ReferenceLink>
+            </p>
+          </div>
+        )}
+      </div>
     </main>
+  );
+}
+
+function Chevron({ open }: { open: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="12"
+      height="12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className={`shrink-0 transition-transform duration-150 ease-out ${open ? 'rotate-180' : ''}`}
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
+
+function ReferenceLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1 rounded-sm text-primary underline decoration-1 underline-offset-2 outline-none transition-opacity duration-150 ease-out hover:opacity-80 focus-visible:ring-2 focus-visible:ring-primary"
+    >
+      {children}
+      <svg
+        viewBox="0 0 24 24"
+        width="12"
+        height="12"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+        className="shrink-0"
+      >
+        <path d="M7 17 17 7" />
+        <path d="M8 7h9v9" />
+      </svg>
+      <span className="sr-only"> (opens in a new tab)</span>
+    </a>
   );
 }
