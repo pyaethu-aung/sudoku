@@ -82,7 +82,7 @@ export default function Board({
       role="grid"
       aria-label="Sudoku board"
       onKeyDown={handleKeyDown}
-      className="grid w-[min(90vw,30rem)] grid-cols-9 overflow-hidden rounded-xl border-2 border-line-bold bg-page shadow-sm"
+      className="grid w-[var(--grid-width)] grid-cols-9 overflow-hidden rounded-xl border-2 border-line-bold bg-page shadow-sm"
     >
       {display.map((rowValues, row) => (
         // `contents` keeps cells as direct grid items while exposing row semantics.

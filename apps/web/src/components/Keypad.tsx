@@ -23,7 +23,7 @@ export default function Keypad({ onInput, onErase, disabled }: KeypadProps) {
     <div
       role="group"
       aria-label="Number pad"
-      className="keypad w-[min(90vw,30rem)] grid-cols-5 gap-1.5"
+      className="keypad w-[var(--grid-width)] grid-cols-5 gap-1.5"
     >
       {DIGITS.map((digit) => (
         <button

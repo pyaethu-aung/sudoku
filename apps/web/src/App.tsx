@@ -161,7 +161,7 @@ export default function App() {
         </Button>
       </div>
 
-      <div className="flex w-[min(90vw,30rem)] flex-col items-center gap-2">
+      <div className="flex w-[var(--grid-width)] flex-col items-center gap-2">
         <p
           role="status"
           aria-live="polite"

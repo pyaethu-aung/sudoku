@@ -5,6 +5,7 @@
 @layer base {
   :root {
     --bg: oklch(1 0 0);
+    --grid-width: min(90vw, 30rem);
     --surface: oklch(0.968 0.004 255);
     --ink: oklch(0.22 0.02 260);
     --muted: oklch(0.55 0.015 260);
@@ -67,6 +68,13 @@
 }
 
 @media (pointer: coarse) {
+  :root {
+    /* Maximize grid width on touch so cells approach the 44px target. At 375px
+       viewport (e.g. iPhone SE) this yields ~41.7px cells — the closest we can
+       get without overflow on a 9-column grid narrower than 396px. */
+    --grid-width: min(100vw, 30rem);
+  }
+
   .keypad {
     display: grid;
   }
