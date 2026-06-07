@@ -25,7 +25,7 @@ export default function App() {
   const [solution, setSolution] = useState<Grid | null>(null);
   const [status, setStatus] = useState<Status | null>(null);
   const [whyOpen, setWhyOpen] = useState(false);
-  // The board as it was before the last Clear, kept so Clear can be undone.
+  // The board as it was before the last Clear or paste, kept so it can be undone.
   const [cleared, setCleared] = useState<Grid | null>(null);
   // Polite, screen-reader-only narration of grid edits (which never reach the
   // visual status line). Updated on every cell change, paste, and undo.
@@ -107,26 +107,28 @@ export default function App() {
     setCleared(null);
     setSolution(null);
     setStatus(null);
-    setAnnounce('Clear undone');
+    setAnnounce('Restored previous board');
   }, [cleared]);
 
   // Load a puzzle pasted as an 81-character string (digits, with 0 or . for
   // blanks). Non-matching pastes are ignored so normal copy/paste still works.
+  // Like Clear, a paste over a non-empty board is recoverable via Undo.
   useEffect(() => {
     function onPaste(event: ClipboardEvent) {
       const parsed = parsePuzzle(event.clipboardData?.getData('text') ?? '');
       if (!parsed) return;
       event.preventDefault();
+      const hadClues = countClues(board) > 0;
+      setCleared(hadClues ? board : null);
       setBoard(parsed);
       setSolution(null);
-      setStatus(null);
+      setStatus(hadClues ? { kind: 'info', text: 'Puzzle loaded' } : null);
       setWhyOpen(false);
-      setCleared(null);
       setAnnounce('Puzzle loaded from paste');
     }
     window.addEventListener('paste', onPaste);
     return () => window.removeEventListener('paste', onPaste);
-  }, []);
+  }, [board]);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-page px-4 py-10 text-ink">
