@@ -84,24 +84,27 @@ export default function Board({
       onKeyDown={handleKeyDown}
       className="grid w-[min(90vw,30rem)] grid-cols-9 overflow-hidden rounded-xl border-2 border-line-bold bg-page shadow-sm"
     >
-      {display.map((rowValues, row) =>
-        rowValues.map((value, col) => {
-          const key = cellKey(row, col);
-          return (
-            <Cell
-              key={key}
-              row={row}
-              col={col}
-              value={value}
-              selected={!!selected && selected[0] === row && selected[1] === col}
-              related={isRelated(selected, row, col)}
-              conflict={!solved && conflicts.has(key)}
-              solved={solved && board[row][col] === 0}
-              onSelect={onSelect}
-            />
-          );
-        }),
-      )}
+      {display.map((rowValues, row) => (
+        // `contents` keeps cells as direct grid items while exposing row semantics.
+        <div role="row" className="contents" key={row}>
+          {rowValues.map((value, col) => {
+            const key = cellKey(row, col);
+            return (
+              <Cell
+                key={key}
+                row={row}
+                col={col}
+                value={value}
+                selected={!!selected && selected[0] === row && selected[1] === col}
+                related={isRelated(selected, row, col)}
+                conflict={!solved && conflicts.has(key)}
+                solved={solved && board[row][col] === 0}
+                onSelect={onSelect}
+              />
+            );
+          })}
+        </div>
+      ))}
     </div>
   );
 }
