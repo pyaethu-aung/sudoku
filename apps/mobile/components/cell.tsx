@@ -69,7 +69,6 @@ export default function Cell({
       keyboardType="number-pad"
       maxLength={1}
       caretHidden
-      selectTextOnFocus
       selectionColor="transparent"
       contextMenuHidden
       accessibilityLabel={`Row ${row + 1}, column ${col + 1}${value ? `, ${value}` : ', empty'}`}
