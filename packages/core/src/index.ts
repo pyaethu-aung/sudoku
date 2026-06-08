@@ -1,5 +1,14 @@
 export type Grid = number[][];
 
+export {
+  MIN_CLUES,
+  emptyBoard,
+  countClues,
+  cellKey,
+  parsePuzzle,
+  getConflicts,
+} from './board';
+
 /**
  * Whether placing `num` at (row, col) keeps the board valid, ignoring the
  * current contents of that cell. Checks the row, column, and 3×3 box.
