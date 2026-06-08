@@ -54,17 +54,18 @@ export default function Cell({
   // are normal.
   const fontWeight = selected || (!solved && value !== 0) || conflict ? '700' : '400';
 
-  // The number pad emits a digit, a 0, or an empty string (its ⌫ key, which
-  // replaces the old erase button). Both 0 and empty clear the cell.
-  function handleChangeText(text: string) {
-    const ch = text.replace(/[^0-9]/g, '').slice(-1);
-    onChangeDigit(row, col, ch === '' || ch === '0' ? 0 : Number(ch));
+  function handleKeyPress(key: string) {
+    if (/^[1-9]$/.test(key)) {
+      onChangeDigit(row, col, Number(key));
+    } else if (key === 'Backspace' || key === '0') {
+      onChangeDigit(row, col, 0);
+    }
   }
 
   return (
     <TextInput
       value={value === 0 ? '' : String(value)}
-      onChangeText={handleChangeText}
+      onKeyPress={({ nativeEvent: { key } }) => handleKeyPress(key)}
       onFocus={() => onSelect(row, col)}
       keyboardType="number-pad"
       maxLength={1}
