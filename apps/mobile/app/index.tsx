@@ -1,14 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
-import {
-  Platform,
-  Pressable,
-  ScrollView,
-  StatusBar,
-  Text,
-  useColorScheme,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import { Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-native';
+import { Stack } from 'expo-router/stack';
 import {
   countClues,
   countSolutions,
@@ -18,10 +10,10 @@ import {
   solve,
   type Grid,
 } from '@sudoku/core';
-import Board from './components/board';
-import Button from './components/button';
-import Keypad from './components/keypad';
-import { useTheme } from './components/theme';
+import Board from '../components/board';
+import Button from '../components/button';
+import Keypad from '../components/keypad';
+import { useTheme } from '../components/theme';
 
 type StatusKind = 'info' | 'warning' | 'error' | 'success';
 interface Status {
@@ -29,14 +21,12 @@ interface Status {
   text: string;
 }
 
-export default function App() {
+export default function Index() {
   const theme = useTheme();
-  const scheme = useColorScheme();
   const { width } = useWindowDimensions();
 
   // Snap the board edge to a multiple of 9 so every cell is a whole pixel.
   const boardSize = Math.floor(Math.min(width - 24, 460) / 9) * 9;
-  const topInset = Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) : 0;
 
   const [board, setBoard] = useState<Grid>(emptyBoard);
   // Start with the top-left cell selected so the keypad has a target on load.
@@ -129,25 +119,23 @@ export default function App() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.bg }}>
-      <StatusBar barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'} />
+    <>
+      <Stack.Screen options={{ contentStyle: { backgroundColor: theme.bg } }} />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         keyboardShouldPersistTaps="handled"
+        style={{ backgroundColor: theme.bg }}
         contentContainerStyle={{
-          paddingTop: topInset + 24,
+          paddingTop: 8,
           paddingBottom: 48,
           paddingHorizontal: 12,
           gap: 24,
           alignItems: 'center',
         }}
       >
-        <View style={{ alignItems: 'center', gap: 4 }}>
-          <Text style={{ fontSize: 28, fontWeight: '600', color: theme.ink }}>Sudoku Solver</Text>
-          <Text style={{ fontSize: 14, color: theme.muted, textAlign: 'center' }}>
-            Tap a cell, enter a puzzle, then solve. Conflicts highlight as you go.
-          </Text>
-        </View>
+        <Text style={{ fontSize: 14, color: theme.muted, textAlign: 'center' }}>
+          Tap a cell, enter a puzzle, then solve. Conflicts highlight as you go.
+        </Text>
 
         <Board
           display={display}
@@ -224,6 +212,6 @@ export default function App() {
           )}
         </View>
       </ScrollView>
-    </View>
+    </>
   );
 }

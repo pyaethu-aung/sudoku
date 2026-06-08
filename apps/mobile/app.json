@@ -4,7 +4,10 @@
     "slug": "sudoku",
     "version": "1.0.0",
     "orientation": "portrait",
+    "scheme": "sudoku",
+    "userInterfaceStyle": "automatic",
     "platforms": ["ios", "android"],
-    "sdkVersion": "56.0.0"
+    "sdkVersion": "56.0.0",
+    "plugins": ["expo-router"]
   }
 }
