@@ -1,5 +1,14 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Keyboard, Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-native';
+import {
+  Keyboard,
+  Platform,
+  PlatformColor,
+  Pressable,
+  ScrollView,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import { Stack } from 'expo-router/stack';
 import {
   countClues,
@@ -112,19 +121,34 @@ export default function Index() {
     success: theme.accent,
   };
 
+  // Use the OS tint so the bar buttons match system controls (and adapt to the
+  // user's accent and light/dark) rather than our own brand blue. iOS exposes a
+  // dedicated link/tint color; on Android we fall back to the themed primary.
+  const headerTint = Platform.OS === 'ios' ? PlatformColor('link') : theme.primary;
+
   return (
     <>
       <Stack.Screen
         options={{
           contentStyle: { backgroundColor: theme.bg },
           headerLeft: () => (
-            <Pressable onPress={handleClear} accessibilityRole="button" hitSlop={8}>
-              <Text style={{ fontSize: 17, color: theme.muted }}>Clear</Text>
+            <Pressable
+              onPress={handleClear}
+              accessibilityRole="button"
+              hitSlop={8}
+              style={({ pressed }) => ({ opacity: pressed ? 0.3 : 1 })}
+            >
+              <Text style={{ fontSize: 17, color: headerTint }}>Clear</Text>
             </Pressable>
           ),
           headerRight: () => (
-            <Pressable onPress={handleSolve} accessibilityRole="button" hitSlop={8}>
-              <Text style={{ fontSize: 17, fontWeight: '600', color: theme.primary }}>Solve</Text>
+            <Pressable
+              onPress={handleSolve}
+              accessibilityRole="button"
+              hitSlop={8}
+              style={({ pressed }) => ({ opacity: pressed ? 0.3 : 1 })}
+            >
+              <Text style={{ fontSize: 17, fontWeight: '600', color: headerTint }}>Solve</Text>
             </Pressable>
           ),
         }}
