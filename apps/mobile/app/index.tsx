@@ -138,7 +138,7 @@ export default function Index() {
               hitSlop={8}
               style={({ pressed }) => ({ opacity: pressed ? 0.3 : 1 })}
             >
-              <Text style={{ fontSize: 17, color: headerTint }}>Clear</Text>
+              <Text style={{ fontSize: 17, color: theme.muted }}>Clear</Text>
             </Pressable>
           ),
           headerRight: () => (
