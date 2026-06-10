@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "tsc --noEmit",
-    "lint": "eslint src --ext ts",
+    "lint": "eslint src --ext ts --cache",
     "test": "vitest run"
   },
   "devDependencies": {

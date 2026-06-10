@@ -12,6 +12,9 @@ ios/
 # Vite
 apps/web/dist
 
+# ESLint
+.eslintcache
+
 # Misc
 .DS_Store
 *.local

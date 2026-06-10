@@ -24,23 +24,42 @@ permissions:
 jobs:
   lint-test-build:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - uses: pnpm/action-setup@v4
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
         with:
           version: 9.0.0
 
-      - uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
         with:
-          node-version: "20"
-          cache: "pnpm"
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
 
-      - run: pnpm install --frozen-lockfile
+      - name: Cache ESLint
+        uses: actions/cache@v5
+        with:
+          path: |
+            apps/web/.eslintcache
+            apps/mobile/.eslintcache
+            packages/core/.eslintcache
+            packages/ui/.eslintcache
+          key: eslint-${{ runner.os }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
+          restore-keys: |
+            eslint-${{ runner.os }}-
 
-      - run: pnpm lint
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - run: pnpm test
+      - name: Lint
+        run: pnpm lint
 
-      - run: pnpm build
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
