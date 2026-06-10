@@ -26,6 +26,19 @@ the puzzle has multiple solutions. Rule conflicts highlight in red as you type.
   solver-filled cells are visually distinct from the digits you entered.
 - Adapts to light and dark system themes.
 
+## Mobile app
+
+Enter a puzzle using the native number pad and solve it. The same solver
+and conflict-detection logic runs on-device via `@sudoku/core`.
+
+- Tap a cell to select it; the OS number pad appears automatically.
+- Tap a digit to fill the selected cell; tap the erase key to clear it.
+- **Solve** fills a uniquely-solvable puzzle; **Clear** empties the board.
+- Adapts to light and dark system themes via `userInterfaceStyle: automatic`.
+
+Mobile builds are handled by EAS — `pnpm --filter @sudoku/mobile dev` starts
+the Expo dev server for local development.
+
 ## Getting started
 
 Requires Node ≥ 20 and pnpm ≥ 9.
@@ -56,10 +69,16 @@ GitHub Actions runs on every pull request to `main`:
 |----------|---------|----------------|
 | Lint, Test and Build | PR | `pnpm lint`, `pnpm test`, `pnpm build` |
 | Security Scan | PR + push to `main` + weekly | `pnpm audit`, Snyk, CodeQL |
+| Deploy to GitHub Pages | Release published + manual | Build web app and deploy to GitHub Pages |
+| Docker | PR + release + weekly | Hadolint, Trivy scan (amd64 + arm64), push to GHCR, Cosign sign |
 
 Dependabot opens PRs daily for outdated npm packages and GitHub Actions pins.
 
-> **Note:** The Security Scan workflow requires a `SNYK_TOKEN` secret configured in the repository settings for Snyk results to appear in the GitHub Security tab. CodeQL runs without any secrets.
+> **Note:** The Security Scan workflow requires a `SNYK_TOKEN` secret for Snyk results to appear in the GitHub Security tab. CodeQL runs without any secrets.
+>
+> **Note:** The Deploy workflow requires GitHub Pages source set to **GitHub Actions** in repository Settings → Pages.
+>
+> **Note:** The Docker workflow pushes and signs images only on semver tag releases (`v*.*.*`). Trivy scans run on every PR and the weekly cron without pushing.
 
 ## Contributing
 
