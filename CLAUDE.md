@@ -115,11 +115,15 @@ helpers (`emptyBoard`, `countClues`, `cellKey`, `parsePuzzle`, `getConflicts`,
 (Expo Router), each importing all domain logic from `@sudoku/core`. The mobile
 `build` step is a no-op (`echo` command); actual mobile builds go through EAS.
 
-Brand assets are in place. `apps/web/public/` holds `logo.svg` (light),
-`logo-dark.svg` (dark), and `favicon.svg` (single adaptive SVG with an
-embedded `prefers-color-scheme` media query used as the browser tab icon).
+Brand assets are in place. The header logos live in `apps/web/src/assets/`
+(`logo.svg` light, `logo-dark.svg` dark) and are imported in `App.tsx` so
+Vite emits base-aware URLs (inlined as `data:` URIs since they're <4 KB).
+`apps/web/public/` holds `favicon.svg` (single adaptive SVG with an embedded
+`prefers-color-scheme` media query used as the browser tab icon).
 `apps/web/vite.config.ts` sets `base: './'` for GitHub Pages compatibility —
-use relative paths when referencing public assets from source. The mobile app
+do not reference public assets with absolute paths (e.g. `/logo.svg`) from
+source JSX; Vite only rewrites `base` in `index.html`, not runtime strings,
+so import assets or use `import.meta.env.BASE_URL`. The mobile app
 has a 1024×1024 `assets/icon.png` wired up as icon, splash, and Android
 adaptive icon in `app.json`.
 

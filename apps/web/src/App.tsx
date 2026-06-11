@@ -4,6 +4,8 @@ import { Button } from '@sudoku/ui';
 import { countClues, emptyBoard, getConflicts, MIN_CLUES, parsePuzzle } from './sudoku';
 import Board from './components/Board';
 import Keypad from './components/Keypad';
+import logoUrl from './assets/logo.svg';
+import logoDarkUrl from './assets/logo-dark.svg';
 
 type StatusKind = 'info' | 'warning' | 'error' | 'success';
 interface Status {
@@ -152,8 +154,8 @@ export default function App() {
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-page px-4 py-10 text-ink">
       <header className="text-center">
         <picture className="mb-3 block">
-          <source srcSet="/logo-dark.svg" media="(prefers-color-scheme: dark)" />
-          <img src="/logo.svg" alt="" width="48" height="48" className="mx-auto" aria-hidden="true" />
+          <source srcSet={logoDarkUrl} media="(prefers-color-scheme: dark)" />
+          <img src={logoUrl} alt="" width="48" height="48" className="mx-auto" aria-hidden="true" />
         </picture>
         <h1 className="text-2xl font-semibold tracking-tight">Sudoku Solver</h1>
         <p className="mt-1 text-sm text-muted">
