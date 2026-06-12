@@ -16,6 +16,7 @@
     --danger: oklch(0.55 0.2 25);
     --warning: oklch(0.52 0.13 72);
     --cell-related: oklch(0.95 0.02 255);
+    --cell-same-digit: oklch(0.87 0.06 255);
     --cell-conflict-bg: oklch(0.95 0.05 25);
     --grid-line: oklch(0.85 0.005 260);
     --grid-line-bold: oklch(0.3 0.02 260);
@@ -34,6 +35,7 @@
       --danger: oklch(0.68 0.19 25);
       --warning: oklch(0.8 0.13 75);
       --cell-related: oklch(0.26 0.03 255);
+      --cell-same-digit: oklch(0.36 0.06 255);
       --cell-conflict-bg: oklch(0.3 0.06 25);
       --grid-line: oklch(0.32 0.01 260);
       --grid-line-bold: oklch(0.62 0.02 260);

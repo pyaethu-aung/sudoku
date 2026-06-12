@@ -1,4 +1,4 @@
-import { TextInput } from 'react-native';
+import { Pressable, Text } from 'react-native';
 import type { Theme } from './theme';
 
 interface CellProps {
@@ -8,19 +8,26 @@ interface CellProps {
   size: number;
   selected: boolean;
   related: boolean;
+  /** Holds the same digit as the selected cell. */
+  sameDigit: boolean;
   conflict: boolean;
   /** Filled by the solver (was empty in the user's board) — styled as a hint. */
   solved: boolean;
   theme: Theme;
-  /** Focus moved here — drives the selection highlight. */
+  /** Tapped — drives the selection highlight. */
   onSelect: (row: number, col: number) => void;
-  /** Digit typed (1-9), or 0 to clear. */
-  onChangeDigit: (row: number, col: number, value: number) => void;
 }
 
-function background(t: Theme, selected: boolean, conflict: boolean, related: boolean): string {
+function background(
+  t: Theme,
+  selected: boolean,
+  conflict: boolean,
+  sameDigit: boolean,
+  related: boolean,
+): string {
   if (selected) return t.primary;
   if (conflict) return t.conflictBg;
+  if (sameDigit) return t.sameDigit;
   if (related) return t.related;
   return t.bg;
 }
@@ -39,11 +46,11 @@ export default function Cell({
   size,
   selected,
   related,
+  sameDigit,
   conflict,
   solved,
   theme,
   onSelect,
-  onChangeDigit,
 }: CellProps) {
   // Heavy 2px rules on box boundaries, hairlines elsewhere; the outer frame
   // draws the board edge, so the last row/column add none. Mirrors web Cell.
@@ -54,42 +61,34 @@ export default function Cell({
   // are normal.
   const fontWeight = selected || (!solved && value !== 0) || conflict ? '700' : '400';
 
-  function handleKeyPress(key: string) {
-    if (/^[1-9]$/.test(key)) {
-      onChangeDigit(row, col, Number(key));
-    } else if (key === 'Backspace' || key === '0') {
-      onChangeDigit(row, col, 0);
-    }
-  }
-
   return (
-    <TextInput
-      value={value === 0 ? '' : String(value)}
-      onKeyPress={({ nativeEvent: { key } }) => handleKeyPress(key)}
-      onFocus={() => onSelect(row, col)}
-      keyboardType="number-pad"
-      maxLength={1}
-      caretHidden
-      selectionColor="transparent"
-      contextMenuHidden
+    <Pressable
+      onPress={() => onSelect(row, col)}
+      accessibilityRole="button"
       accessibilityLabel={`Row ${row + 1}, column ${col + 1}${value ? `, ${value}` : ', empty'}`}
       style={{
         width: size,
         height: size,
-        padding: 0,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        fontSize: Math.round(size * 0.5),
-        fontWeight,
-        fontVariant: ['tabular-nums'],
-        color: digitColor(theme, selected, conflict, solved),
-        textDecorationLine: conflict ? 'underline' : 'none',
-        backgroundColor: background(theme, selected, conflict, related),
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: background(theme, selected, conflict, sameDigit, related),
         borderRightWidth,
         borderBottomWidth,
         borderRightColor: col % 3 === 2 ? theme.lineBold : theme.line,
         borderBottomColor: row % 3 === 2 ? theme.lineBold : theme.line,
       }}
-    />
+    >
+      <Text
+        style={{
+          fontSize: Math.round(size * 0.5),
+          fontWeight,
+          fontVariant: ['tabular-nums'],
+          color: digitColor(theme, selected, conflict, solved),
+          textDecorationLine: conflict ? 'underline' : 'none',
+        }}
+      >
+        {value === 0 ? '' : String(value)}
+      </Text>
+    </Pressable>
   );
 }

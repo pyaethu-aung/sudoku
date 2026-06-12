@@ -17,6 +17,8 @@ export interface Theme {
   danger: string;
   warning: string;
   related: string;
+  /** Cells sharing the selected cell's digit — a stronger tint than `related`. */
+  sameDigit: string;
   conflictBg: string;
   line: string;
   lineBold: string;
@@ -33,6 +35,7 @@ const light: Theme = {
   danger: '#d23a2c',
   warning: '#9a6a16',
   related: '#e7eefb',
+  sameDigit: '#c3d6f7',
   conflictBg: '#fbe3df',
   line: '#d3d6db',
   lineBold: '#393f4b',
@@ -49,6 +52,7 @@ const dark: Theme = {
   danger: '#ef6952',
   warning: '#e3a94e',
   related: '#29303f',
+  sameDigit: '#39455e',
   conflictBg: '#4a2b26',
   line: '#434954',
   lineBold: '#939ba7',
