@@ -71,6 +71,12 @@
   display: none;
 }
 
+/* Suppress the OS tap-flash so our own active:bg-related press state is the
+   only feedback on touch. */
+.keypad button {
+  -webkit-tap-highlight-color: transparent;
+}
+
 @media (pointer: coarse) {
   :root {
     /* Maximize grid width on touch so cells approach the 44px target. At 375px

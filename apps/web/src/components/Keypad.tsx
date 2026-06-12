@@ -10,7 +10,9 @@ interface KeypadProps {
 const KEY_CLASS = [
   'flex min-h-12 items-center justify-center rounded-md border border-line bg-page',
   'text-xl font-semibold tabular-nums text-ink',
-  'transition-colors duration-150 ease-out outline-none select-none',
+  // touch-manipulation drops the 300ms tap delay and blocks double-tap zoom so
+  // rapid digit entry registers cleanly on touch.
+  'touch-manipulation transition-colors duration-150 ease-out outline-none select-none',
   'hover:bg-surface active:bg-related',
   'focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
   'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-page',
