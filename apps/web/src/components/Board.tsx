@@ -39,6 +39,8 @@ export default function Board({
   onSolve,
 }: BoardProps) {
   const gridRef = useRef<HTMLDivElement>(null);
+  // The digit in the selected cell, so every cell holding it can be highlighted.
+  const selectedValue = selected ? display[selected[0]][selected[1]] : 0;
 
   // Keep DOM focus on the selected cell so the focus ring and selection never
   // diverge, and arrow keys move both together.
@@ -99,6 +101,7 @@ export default function Board({
                 value={value}
                 selected={!!selected && selected[0] === row && selected[1] === col}
                 related={isRelated(selected, row, col)}
+                sameDigit={selectedValue !== 0 && value === selectedValue}
                 conflict={!solved && conflicts.has(key)}
                 solved={solved && board[row][col] === 0}
                 onSelect={onSelect}

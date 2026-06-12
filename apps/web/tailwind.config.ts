@@ -15,6 +15,7 @@ export default {
         danger: 'var(--danger)',
         warning: 'var(--warning)',
         related: 'var(--cell-related)',
+        'same-digit': 'var(--cell-same-digit)',
         'conflict-bg': 'var(--cell-conflict-bg)',
         line: 'var(--grid-line)',
         'line-bold': 'var(--grid-line-bold)',

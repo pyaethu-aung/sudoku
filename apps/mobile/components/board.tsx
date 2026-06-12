@@ -15,7 +15,6 @@ interface BoardProps {
   size: number;
   theme: Theme;
   onSelect: (row: number, col: number) => void;
-  onChangeDigit: (row: number, col: number, value: number) => void;
 }
 
 function isRelated(selected: [number, number] | null, row: number, col: number): boolean {
@@ -36,9 +35,10 @@ export default function Board({
   size,
   theme,
   onSelect,
-  onChangeDigit,
 }: BoardProps) {
   const cellSize = Math.floor(size / 9);
+  // The digit in the selected cell, so every cell holding it can be highlighted.
+  const selectedValue = selected ? display[selected[0]][selected[1]] : 0;
 
   return (
     <View
@@ -65,11 +65,11 @@ export default function Board({
                 size={cellSize}
                 selected={!!selected && selected[0] === row && selected[1] === col}
                 related={isRelated(selected, row, col)}
+                sameDigit={selectedValue !== 0 && value === selectedValue}
                 conflict={!solved && conflicts.has(key)}
                 solved={solved && board[row][col] === 0}
                 theme={theme}
                 onSelect={onSelect}
-                onChangeDigit={onChangeDigit}
               />
             );
           })}

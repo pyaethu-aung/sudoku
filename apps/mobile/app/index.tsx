@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
 import {
-  Keyboard,
   Platform,
   PlatformColor,
   Pressable,
@@ -20,6 +19,7 @@ import {
   type Grid,
 } from '@sudoku/core';
 import Board from '../components/board';
+import NumberPad from '../components/numberpad';
 import { useTheme } from '../components/theme';
 
 type StatusKind = 'info' | 'warning' | 'error' | 'success';
@@ -62,8 +62,19 @@ export default function Index() {
     setCleared(null);
   }, []);
 
+  // The number pad acts on whichever cell is selected; with none, it's inert.
+  const handlePadDigit = useCallback(
+    (digit: number) => {
+      if (selected) writeCell(selected[0], selected[1], digit);
+    },
+    [selected, writeCell],
+  );
+
+  const handleErase = useCallback(() => {
+    if (selected) writeCell(selected[0], selected[1], 0);
+  }, [selected, writeCell]);
+
   const handleSolve = useCallback(() => {
-    Keyboard.dismiss();
     setWhyOpen(false);
 
     if (conflicts.size > 0) {
@@ -96,7 +107,6 @@ export default function Index() {
   }, [board, conflicts]);
 
   const handleClear = useCallback(() => {
-    Keyboard.dismiss();
     const hadClues = countClues(board) > 0;
     setCleared(hadClues ? board : null);
     setBoard(emptyBoard());
@@ -155,7 +165,6 @@ export default function Index() {
       />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        keyboardShouldPersistTaps="handled"
         style={{ backgroundColor: theme.bg }}
         contentContainerStyle={{
           paddingTop: 8,
@@ -178,7 +187,14 @@ export default function Index() {
           size={boardSize}
           theme={theme}
           onSelect={(row, col) => setSelected([row, col])}
-          onChangeDigit={writeCell}
+        />
+
+        <NumberPad
+          theme={theme}
+          size={boardSize}
+          disabled={selected === null}
+          onDigit={handlePadDigit}
+          onErase={handleErase}
         />
 
         <View style={{ width: boardSize, alignItems: 'center', gap: 8, minHeight: 24 }}>

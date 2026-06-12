@@ -4,14 +4,22 @@ interface CellProps {
   value: number;
   selected: boolean;
   related: boolean;
+  /** Holds the same digit as the selected cell. */
+  sameDigit: boolean;
   conflict: boolean;
   solved: boolean;
   onSelect: (row: number, col: number) => void;
 }
 
-function backgroundClass(selected: boolean, conflict: boolean, related: boolean): string {
+function backgroundClass(
+  selected: boolean,
+  conflict: boolean,
+  sameDigit: boolean,
+  related: boolean,
+): string {
   if (selected) return 'bg-primary';
   if (conflict) return 'bg-conflict-bg';
+  if (sameDigit) return 'bg-same-digit';
   if (related) return 'bg-related';
   return 'bg-page';
 }
@@ -25,7 +33,7 @@ function digitClass(selected: boolean, conflict: boolean, solved: boolean): stri
   return 'text-ink font-bold';
 }
 
-export default function Cell({ row, col, value, selected, related, conflict, solved, onSelect }: CellProps) {
+export default function Cell({ row, col, value, selected, related, sameDigit, conflict, solved, onSelect }: CellProps) {
   const borderR =
     col === 8 ? '' : col % 3 === 2 ? 'border-r-2 border-r-line-bold' : 'border-r border-r-line';
   const borderB =
@@ -46,7 +54,7 @@ export default function Cell({ row, col, value, selected, related, conflict, sol
         'flex aspect-square items-center justify-center text-[clamp(1rem,5vw,1.6rem)] tabular-nums',
         'transition-colors duration-150 ease-out outline-none select-none',
         'focus-visible:relative focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
-        backgroundClass(selected, conflict, related),
+        backgroundClass(selected, conflict, sameDigit, related),
         digitClass(selected, conflict, solved),
         borderR,
         borderB,
