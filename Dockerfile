@@ -19,7 +19,7 @@ FROM --platform=$BUILDPLATFORM node:20-alpine AS builder
 WORKDIR /app
 
 # Enable pnpm via corepack (ships with Node 20)
-RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
+RUN corepack enable && corepack prepare pnpm@9.15.9 --activate
 
 # Copy workspace manifests for layer cache optimization
 # Only re-runs pnpm install when manifest files change, not on source edits
